@@ -14,7 +14,7 @@ audioOptions=("141" "140" "139")
 videoOptions=("264" "137" "136" "135" "134" "133" "160")
 
 # Double check input variables
-if [[ $saveMediaType != "-a" ]] || [[ $saveMediaType != "-v" ]] || [[ $saveMediaType != "-av" ]]; then
+if [[ "$saveMediaType" != "-"* ]]; then
 	echo "Usage: youtube-downloader [media type: -a, -v, -av] [YouTube URL]"
 fi
 
