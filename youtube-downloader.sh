@@ -24,6 +24,7 @@ fi
 
 if [[ $saveMediaType == "-a" ]] || [[ $saveMediaType == "-av" ]]; then
 
+echo "Finding best audio..."
 # Remove the '#' for lines " :<<'END' " & " END " to script downloading the file from YouTube
 # and only handle filesystem arguments 
 
@@ -36,6 +37,7 @@ until [ $success == 0 ]; do
 	if [ $theAttempt == 0 ] 
 	then
 	success=$theAttempt
+	echo "Successfully downloaded audio! :)"
 	else
 	i=$i+1
 	fi
@@ -49,7 +51,7 @@ fi
 #--------------------------------------------------
 
 if [[ $saveMediaType == "-v" ]] || [[ $saveMediaType == "-av" ]]; then
-
+echo "Finding best video..."
 #: <<'END'
 success=1
 i=0
@@ -59,6 +61,7 @@ until [ $success == 0 ]; do
 	if [ $theAttempt == 0 ] 
 	then
 	success=$theAttempt
+	echo "Successfully downloaded video! :)"
 	else
 	i=$i+1
 	fi
@@ -74,6 +77,7 @@ fi
 # Check if anything was downloaded
 if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded.
+	echo "Managing files..."
 	if [[ $saveMediaType == "-a" ]]; then
 		tubeAudioFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".m4a")
 	elif [[ $saveMediaType == "-v" ]]; then
@@ -84,17 +88,21 @@ if [[ $success == 0 ]]; then
 	fi
 	
 	# Convert downloaded file(s) into something usable
+	echo "Converting..."
 	if [[ $saveMediaType == "-a" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
-		ffmpeg -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		echo "Cleaning up the mess I've made..."
 		rm "$tubeAudioFile"
 	elif [[ $saveMediaType == "-v" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		echo "Cleaning up the mess I've made..."
 		rm "$tubeVideoFile"
 	elif [[ $saveMediaType == "-av" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		echo "Cleaning up the mess I've made..."
 		rm "$tubeAudioFile"
 		rm "$tubeVideoFile"
 	fi
