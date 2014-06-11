@@ -9,4 +9,10 @@ All of the YouTube downloaders I've used in the past have all had something miss
 
 Words of Advice:
 ================
-1. youtube-dl is required to use this script. I hope to have the script check for it in the future.
+1. youtube-dl is required to use this script.
+
+Things to do:
+=============
+1. Add a check for youtube-dl and prompt to install if needed.
+2. Choose wether to grab Audio, Video, or Both.
+3. Speed up the quality check process.
