@@ -14,5 +14,9 @@ Words of Advice:
 Things to do:
 =============
 1. Add a check for youtube-dl and prompt to install if needed.
-2. Choose wether to grab Audio, Video, or Both.
 3. Speed up the quality check process.
+
+Things Completed:
+=================
+•Choose wether to grab Audio, Video, or Both.
+•Check for proper input before starting script.

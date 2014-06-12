@@ -78,7 +78,7 @@ fi
 # Check if anything was downloaded
 if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded.
-	echo "Managing files..."
+	echo "Managing file(s)..."
 	if [[ $saveMediaType == "-a" ]]; then
 		tubeAudioFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".m4a")
 	elif [[ $saveMediaType == "-v" ]]; then
