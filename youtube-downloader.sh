@@ -3,6 +3,8 @@
 # YouTube Downloader (powered by YouTube-dl)
 # Script Written by Calvin Barrie (viperfan91)
 
+echo "Initializing..."
+
 # Define CL input
 saveMediaType=$1
 myTubeURL=$2
