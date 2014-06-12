@@ -6,40 +6,53 @@
 echo
 echo "Initializing..."
 
+# Check to see if youtube-dl is installed.
+# If it is not then ask if the user wants to install it.
 checkIfInstalled=$(youtube-dl > /dev/null 2>&1; echo $?)
 
+# if not installed
 if [ "$checkIfInstalled" != "0" ]; then
 	echo
 	echo "You do not have youtube-dl installed. It is required for this script."
 	echo "Would you like to install it now? (y/n)"
 	read installAnswer
 	echo
+	# Work with user's response
 	if [ "$installAnswer" == "y" ]; then
+		# User said yes
 		echo "You will be asked for your password twice during installation."
 		echo
 		sleep 3
 		echo "Downloading youtube-dl..."
+		#generate latest youtube-dl download URL
 		baseURL=$(curl -s https://yt-dl.org/downloads/latest)
 		newURL=${baseURL##<!*f\=\"}
 		newerURL=${newURL%%\">*l>}
 		progURL=$(echo $newerURL'/youtube-dl')
-		downloadAttempt="1" #$(sudo curl $progURL -o /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
+		# Use generated URL and store wether it was successful
+		downloadAttempt=$(sudo curl $progURL -o /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
 		if [ "$downloadAttempt" != "0" ]; then
+			# Command came back something other than '0' which means something went wrong
+			# Prompt user with the command to download youtube-dl manually to see what goes wrong
 			echo
 			echo "Something went wrong."
 			echo "Please install youtube-dl manually with these two commands:"
 			echo
 			echo "sudo curl $progURL -o /usr/local/bin/youtube-dl"
 			echo
+			exit
 		else
+			# Download worked
+			# Now it's time to make the downloaded file usable
 			echo "Installing..."
 			installAttempt=$(sudo chmod a+x /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
+			sleep 3
 		fi
 	elif [ "$installAnswer" == "n" ]; then
+	# User answered no to "Would you like to install it now? (y/n)"
+	echo "I'm sorry to see you go."
 	exit
 	fi
-	echo
-	exit
 fi
 
 # Define CL input
