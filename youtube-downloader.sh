@@ -78,7 +78,7 @@ fi
 if [[ $saveMediaType == "-a" ]] || [[ $saveMediaType == "-av" ]]; then
 
 echo "Finding best audio..."
-# Remove the '#' for lines " :<<'END' " & " END " to script downloading the file from YouTube
+# Remove the '#' for lines " :<<'END' " & " END " to stop downloading the file from YouTube
 # and only handle filesystem arguments 
 
 #: <<'END'
