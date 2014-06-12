@@ -3,7 +3,44 @@
 # YouTube Downloader (powered by YouTube-dl)
 # Script Written by Calvin Barrie (viperfan91)
 
+echo
 echo "Initializing..."
+
+checkIfInstalled=$(youtube-dl > /dev/null 2>&1; echo $?)
+
+if [ "$checkIfInstalled" != "0" ]; then
+	echo
+	echo "You do not have youtube-dl installed. It is required for this script."
+	echo "Would you like to install it now? (y/n)"
+	read installAnswer
+	echo
+	if [ "$installAnswer" == "y" ]; then
+		echo "You will be asked for your password twice during installation."
+		echo
+		sleep 3
+		echo "Downloading youtube-dl..."
+		baseURL=$(curl -s https://yt-dl.org/downloads/latest)
+		newURL=${baseURL##<!*f\=\"}
+		newerURL=${newURL%%\">*l>}
+		progURL=$(echo $newerURL'/youtube-dl')
+		downloadAttempt="1" #$(sudo curl $progURL -o /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
+		if [ "$downloadAttempt" != "0" ]; then
+			echo
+			echo "Something went wrong."
+			echo "Please install youtube-dl manually with these two commands:"
+			echo
+			echo "sudo curl $progURL -o /usr/local/bin/youtube-dl"
+			echo
+		else
+			echo "Installing..."
+			installAttempt=$(sudo chmod a+x /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
+		fi
+	elif [ "$installAnswer" == "n" ]; then
+	exit
+	fi
+	echo
+	exit
+fi
 
 # Define CL input
 saveMediaType=$1
