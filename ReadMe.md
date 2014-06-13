@@ -16,5 +16,7 @@ Things to do:
 Things Completed:
 =================
 • Choose wether to grab Audio, Video, or Both.
+
 • Check for proper input before starting script.
+
 • Add a check for youtube-dl and prompt to install if needed.
