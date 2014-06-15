@@ -13,7 +13,21 @@ myTubeURL=$2
 # Check to see if youtube-dl is installed.
 # If it is not then ask if the user wants to install it.
 youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
+echo " . $youtubedlInstalled"
+if [ "$youtubedlInstalled" != "1" ]; then
+	if [ "$youtubedlInstalled" != "0" ]; then
+	youtubedlInstalled="1"
+	fi
+fi
 ffmpegInstalled=$(ffmpeg -h > /dev/null 2>&1; echo $?)
+echo " .. $ffmpegInstalled"
+if [ "$ffmpegInstalled" != 1 ]; then
+	if [ "$ffmpegInstalled" != 0 ]; then
+	ffmpegInstalled="1"
+	fi
+fi
+echo " . $youtubedlInstalled"
+echo " .. $ffmpegInstalled"
 whichAreInstalled="$youtubedlInstalled""$ffmpegInstalled"
 # Declare install functions
 function installDL {
