@@ -8,7 +8,7 @@ echo "Initializing..."
 
 # Check to see if youtube-dl is installed.
 # If it is not then ask if the user wants to install it.
-checkIfInstalled=$(youtube-dl > /dev/null 2>&1; echo $?)
+checkIfInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
 
 # if not installed
 if [ "$checkIfInstalled" != "0" ]; then
@@ -144,12 +144,12 @@ if [[ $success == 0 ]]; then
 	echo "Converting..."
 	if [[ $saveMediaType == "-a" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" "$convertedFileName"
 		echo "Cleaning up the mess I've made..."
 		rm "$tubeAudioFile"
 	elif [[ $saveMediaType == "-v" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeVideoFile" "$convertedFileName"
 		echo "Cleaning up the mess I've made..."
 		rm "$tubeVideoFile"
 	elif [[ $saveMediaType == "-av" ]]; then
