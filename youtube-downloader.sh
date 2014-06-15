@@ -6,21 +6,19 @@
 echo
 echo "Initializing..."
 
+# Define CL input
+saveMediaType=$1
+myTubeURL=$2
+
 # Check to see if youtube-dl is installed.
 # If it is not then ask if the user wants to install it.
-checkIfInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
-
-# if not installed
-if [ "$checkIfInstalled" != "0" ]; then
-	echo
-	echo "You do not have youtube-dl installed. It is required for this script."
-	echo "Would you like to install it now? (y/n)"
-	read installAnswer
-	echo
-	# Work with user's response
-	if [ "$installAnswer" == "y" ]; then
-		# User said yes
-		echo "You will be asked for your password twice during installation."
+youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
+ffmpegInstalled=$(ffmpeg -h > /dev/null 2>&1; echo $?)
+whichAreInstalled="$youtubedlInstalled""$ffmpegInstalled"
+# Declare install functions
+function installDL {
+		# Install youtube-dl
+		echo "You will be asked for your password multiple times during installation."
 		echo
 		sleep 3
 		echo "Downloading youtube-dl..."
@@ -30,6 +28,10 @@ if [ "$checkIfInstalled" != "0" ]; then
 		newerURL=${newURL%%\">*l>}
 		progURL=$(echo $newerURL'/youtube-dl')
 		# Use generated URL and store wether it was successful
+		usrLOCALcheck=$(cd /usr/local/bin > /dev/null 2>&1; echo $?)
+		if [ "$usrLOCALcheck" == "1" ]; then
+			sudo mkdir -p /usr/local/bin
+		fi
 		downloadAttempt=$(sudo curl $progURL -o /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
 		if [ "$downloadAttempt" != "0" ]; then
 			# Command came back something other than '0' which means something went wrong
@@ -48,16 +50,81 @@ if [ "$checkIfInstalled" != "0" ]; then
 			installAttempt=$(sudo chmod a+x /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
 			sleep 3
 		fi
-	elif [ "$installAnswer" == "n" ]; then
-	# User answered no to "Would you like to install it now? (y/n)"
-	echo "I'm sorry to see you go."
+}
+function installFFmpeg {
+	# Install FFmpeg
+	echo
+	echo "To install FFmpeg please follow the instructions on the official FFmpeg website."
+	echo "Would you like to open the download page for FFmpeg? [ (y)es, (n)o ]"
+	read openFFmpegSite
+	if [ "$openFFmpegSite" == "y" ]; then
+		open "http://www.ffmpeg.org/download.html"
+	fi
+	echo
+	echo "Please install FFmpeg and then run this script again."
+	echo
 	exit
+}
+
+if [ "$whichAreInstalled" == "11" ]; then
+	echo
+	echo "Looks like you have youtube-dl nor FFmpeg installed."
+	echo "Both are required to run this script."
+	echo "Would you like to install (y)outube-dl, (f)fmpeg, or (b)oth?"
+	read installWhich
+	if [ "$installWhich" == "y" ]; then
+		echo
+		echo "Although this script will continue without FFmpeg, the downloaded file(s) may not play."
+		echo "Also, if both audio and video are downloaded the files will need to be combined."
+		echo "To avoid this check please add 'F' without quotes to the media type option. Ex: -aF or -avF"
+		echo
+		echo "You're download will begin shortly..."
+		sleep 20
+		installDL
+	elif [ "$installWhich" == "f" ]; then
+		installFFmpeg
+	elif [ "$installWhich" == "b" ]; then
+		installDL
+		installFFmpeg
+	fi
+elif [ "$whichAreInstalled" == "10" ]; then
+	echo
+	echo "Looks like you do not have youtube-dl installed."
+	echo "It is required to run this script."
+	echo "Would you like to install it? (y)es or (n)o"
+	read installTube
+	if [ "$installTube" == "y" ]; then
+		installDL
+	elif [ "$installTube" == "n" ]; then
+		echo
+		echo "Have a nice day :)"
+		exit
+	fi
+elif [ "$whichAreInstalled" == "01" ]; then
+	skipFFCheck=`echo $saveMediaType|awk '{print match($0,"F")}'`;
+	if [ $skipFFCheck -gt 0 ];then
+    	echo "Skipping FFmpeg Check"
+	else
+		echo
+		echo "Looks like you do not have FFmpeg installed."
+		echo "Although it is not required to run this script it is highly suggested."
+		echo "FFmpeg is used after the download process to convert the file(s) into something usable."
+		echo "Would you like to install it? (y)es or (n)o"
+		read installFF
+		if [ "$installFF" == "y" ]; then
+			installFFmpeg
+		elif [ "$installFF" == "n" ]; then
+			echo
+			echo "Although this script will continue the downloaded file(s) may not play."
+			echo "Also, if both audio and video are downloaded the files will need to be combined."
+			echo "To avoid this check please add 'F' without quotes to the media type option. Ex: -aF or -avF"
+			echo "You're download will begin shortly..."
+			echo
+			echo
+			sleep 20
+		fi
 	fi
 fi
-
-# Define CL input
-saveMediaType=$1
-myTubeURL=$2
 
 # Create arrays that contain possible quality options
 # Arrays are ordered so that the highest possible options are tried frist
@@ -127,6 +194,7 @@ fi
 # Begin code for handling downloaded files
 #-----------------------------------------
 
+if [ "$ffmpegInstalled" == "0" ]; then
 # Check if anything was downloaded
 if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded.
@@ -159,4 +227,5 @@ if [[ $success == 0 ]]; then
 		rm "$tubeAudioFile"
 		rm "$tubeVideoFile"
 	fi
+fi
 fi
