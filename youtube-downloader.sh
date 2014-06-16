@@ -13,21 +13,17 @@ myTubeURL=$2
 # Check to see if youtube-dl is installed.
 # If it is not then ask if the user wants to install it.
 youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
-echo " . $youtubedlInstalled"
 if [ "$youtubedlInstalled" != "1" ]; then
 	if [ "$youtubedlInstalled" != "0" ]; then
 	youtubedlInstalled="1"
 	fi
 fi
 ffmpegInstalled=$(ffmpeg -h > /dev/null 2>&1; echo $?)
-echo " .. $ffmpegInstalled"
 if [ "$ffmpegInstalled" != 1 ]; then
 	if [ "$ffmpegInstalled" != 0 ]; then
 	ffmpegInstalled="1"
 	fi
 fi
-echo " . $youtubedlInstalled"
-echo " .. $ffmpegInstalled"
 whichAreInstalled="$youtubedlInstalled""$ffmpegInstalled"
 # Declare install functions
 function installDL {
@@ -156,7 +152,7 @@ fi
 # Begin code for downloading the audio from YouTube
 #--------------------------------------------------
 
-if [[ $saveMediaType == "-a" ]] || [[ $saveMediaType == "-av" ]]; then
+if [ echo $saveMediaType|awk '{print match($0,'a')}' ]; then
 
 echo "Finding best audio..."
 # Remove the '#' for lines " :<<'END' " & " END " to stop downloading the file from YouTube
@@ -184,7 +180,7 @@ fi
 # Begin code for downloading the video from YouTube
 #--------------------------------------------------
 
-if [[ $saveMediaType == "-v" ]] || [[ $saveMediaType == "-av" ]]; then
+if [ echo $saveMediaType|awk '{print match($0,'v')}' ]; then
 echo "Finding best video..."
 #: <<'END'
 success=1
