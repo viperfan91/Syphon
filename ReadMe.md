@@ -9,9 +9,7 @@ All of the YouTube downloaders I've used in the past have all had something miss
 
 Things to do:
 =============
-1. Check for and, if not found, create local/bin folders inside /usr
-2. Check for and install fmmpeg
-3. Speed up the quality check process.
+1. Speed up the quality check process.
 
 Things Completed:
 =================
@@ -20,3 +18,7 @@ Things Completed:
 • Check for proper input before starting script.
 
 • Add a check for youtube-dl and prompt to install if needed.
+
+• Check for and install FFmpeg
+
+• Check for and, if not found, create local/bin folders inside /usr
