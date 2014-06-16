@@ -151,8 +151,9 @@ fi
 #--------------------------------------------------
 # Begin code for downloading the audio from YouTube
 #--------------------------------------------------
-
-if [ echo $saveMediaType|awk '{print match($0,'a')}' ]; then
+getAudio=$(echo $saveMediaType|awk '{print match($0, "a")}')
+echo "getAudio is: $getAudio"
+if [[ "$getAudio" != "0" ]]; then
 
 echo "Finding best audio..."
 # Remove the '#' for lines " :<<'END' " & " END " to stop downloading the file from YouTube
@@ -179,8 +180,9 @@ fi
 #--------------------------------------------------
 # Begin code for downloading the video from YouTube
 #--------------------------------------------------
-
-if [ echo $saveMediaType|awk '{print match($0,'v')}' ]; then
+getVideo=$(echo $saveMediaType|awk '{print match($0,"v")}')
+echo "getVideo is: $getVideo"
+if [[ "$getVideo" != "0" ]]; then
 echo "Finding best video..."
 #: <<'END'
 success=1
