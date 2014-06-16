@@ -1,15 +1,11 @@
 #!/bin/bash
-
 # YouTube Downloader (powered by YouTube-dl)
 # Script Written by Calvin Barrie (viperfan91)
-
 echo
 echo "Initializing..."
-
 # Define CL input
 saveMediaType=$1
 myTubeURL=$2
-
 # Check to see if youtube-dl is installed.
 # If it is not then ask if the user wants to install it.
 youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
@@ -75,7 +71,6 @@ function installFFmpeg {
 	echo
 	exit
 }
-
 if [ "$whichAreInstalled" == "11" ]; then
 	echo
 	echo "Looks like you have youtube-dl nor FFmpeg installed."
@@ -135,30 +130,25 @@ elif [ "$whichAreInstalled" == "01" ]; then
 		fi
 	fi
 fi
-
 # Create arrays that contain possible quality options
 # Arrays are ordered so that the highest possible options are tried frist
 # itag values from http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
 audioOptions=("141" "140" "139")
 videoOptions=("264" "137" "136" "135" "134" "133" "160")
-
 # Double check input variables
 if [[ "$saveMediaType" != "-"* ]] || [[  "$myTubeURL" != *"youtube.com"* ]]; then
 	echo "Usage: youtube-downloader [media type: -a, -v, -av] [YouTube URL]"
 	exit
 fi
-
 #--------------------------------------------------
 # Begin code for downloading the audio from YouTube
 #--------------------------------------------------
 getAudio=$(echo $saveMediaType|awk '{print match($0, "a")}')
 echo "getAudio is: $getAudio"
 if [[ "$getAudio" != "0" ]]; then
-
 echo "Finding best audio..."
 # Remove the '#' for lines " :<<'END' " & " END " to stop downloading the file from YouTube
 # and only handle filesystem arguments 
-
 #: <<'END'
 success=1
 i=0
@@ -174,9 +164,7 @@ until [ $success == 0 ]; do
 	fi
 done
 #END
-
 fi
-
 #--------------------------------------------------
 # Begin code for downloading the video from YouTube
 #--------------------------------------------------
@@ -199,13 +187,10 @@ until [ $success == 0 ]; do
 	fi
 done
 #END
-
 fi
-
 #-----------------------------------------
 # Begin code for handling downloaded files
 #-----------------------------------------
-
 if [ "$ffmpegInstalled" == "0" ]; then
 # Check if anything was downloaded
 if [[ $success == 0 ]]; then
