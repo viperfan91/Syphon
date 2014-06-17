@@ -10,6 +10,7 @@ All of the YouTube downloaders I've used in the past have all had something miss
 Things to do:
 =============
 1. Speed up the quality check process.
+2. Grab video Title and display upon loading to make the process a little for professional.
 
 Things Completed:
 =================
