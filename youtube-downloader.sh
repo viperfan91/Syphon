@@ -6,6 +6,9 @@ echo "Initializing..."
 # Define CL input
 saveMediaType=$1
 myTubeURL=$2
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
 # Check to see if youtube-dl is installed.
 # If it is not then ask if the user wants to install it.
 youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
@@ -130,6 +133,9 @@ elif [ "$whichAreInstalled" == "01" ]; then
 		fi
 	fi
 fi
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
 # Create arrays that contain possible quality options
 # Arrays are ordered so that the highest possible options are tried frist
 # itag values from http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
@@ -140,55 +146,57 @@ if [[ "$saveMediaType" != "-"* ]] || [[  "$myTubeURL" != *"youtube.com"* ]]; the
 	echo "Usage: youtube-downloader [media type: -a, -v, -av] [YouTube URL]"
 	exit
 fi
-#--------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
+# Grab the complete list of available qualities. Also, Serves as a check for the videos availability.
+#----------------------------------------------------------------------------------------------------
+qualityCheck=$(youtube-dl -F $myTubeURL)
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
 # Begin code for downloading the audio from YouTube
 #--------------------------------------------------
 getAudio=$(echo $saveMediaType|awk '{print match($0, "a")}')
-echo "getAudio is: $getAudio"
 if [[ "$getAudio" != "0" ]]; then
 echo "Finding best audio..."
-# Remove the '#' for lines " :<<'END' " & " END " to stop downloading the file from YouTube
-# and only handle filesystem arguments 
-#: <<'END'
 success=1
 i=0
 until [ $success == 0 ]; do
-	theAttempt=$(youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?)
-	#echo $theAttempt
-	if [ $theAttempt == 0 ] 
-	then
-	success=$theAttempt
-	echo "Successfully downloaded audio! :)"
+	if echo "$qualityCheck" | grep -q ${audioOptions[$i]}; then
+    	#echo "matched";
+    	success="0"
 	else
-	i=$i+1
+    	#echo "no match";
+    	i=$i+1
 	fi
 done
-#END
+youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?
 fi
-#--------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
 # Begin code for downloading the video from YouTube
 #--------------------------------------------------
 getVideo=$(echo $saveMediaType|awk '{print match($0,"v")}')
-echo "getVideo is: $getVideo"
 if [[ "$getVideo" != "0" ]]; then
 echo "Finding best video..."
-#: <<'END'
 success=1
 i=0
 until [ $success == 0 ]; do
-	theAttempt=$(youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?)
-	#echo $theAttempt
-	if [ $theAttempt == 0 ] 
-	then
-	success=$theAttempt
-	echo "Successfully downloaded video! :)"
+	if echo "$qualityCheck" | grep -q ${audioOptions[$i]}; then
+    	#echo "matched";
+    	success="0"
 	else
-	i=$i+1
+    	#echo "no match";
+    	i=$i+1
 	fi
 done
-#END
+youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?
 fi
-#-----------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
 # Begin code for handling downloaded files
 #-----------------------------------------
 if [ "$ffmpegInstalled" == "0" ]; then
@@ -196,28 +204,26 @@ if [ "$ffmpegInstalled" == "0" ]; then
 if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded.
 	echo "Managing file(s)..."
-	if [[ $saveMediaType == "-a" ]]; then
+	if [[ "$getAudio" != "0" ]]; then
 		tubeAudioFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".m4a")
-	elif [[ $saveMediaType == "-v" ]]; then
-		tubeVideoFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".mp4")
-	elif [[ $saveMediaType == "-av" ]]; then
-		tubeAudioFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".m4a")
+	fi
+	if [[ "$getVideo" != "0" ]]; then
 		tubeVideoFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".mp4")
 	fi
 	
 	# Convert downloaded file(s) into something usable
 	echo "Converting..."
-	if [[ $saveMediaType == "-a" ]]; then
+	if [[ "$getAudio" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
 		ffmpeg -loglevel quiet -i "$tubeAudioFile" "$convertedFileName"
 		echo "Cleaning up the mess I've made..."
 		rm "$tubeAudioFile"
-	elif [[ $saveMediaType == "-v" ]]; then
+	elif [[ "$getVideo" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
 		ffmpeg -loglevel quiet -i "$tubeVideoFile" "$convertedFileName"
 		echo "Cleaning up the mess I've made..."
 		rm "$tubeVideoFile"
-	elif [[ $saveMediaType == "-av" ]]; then
+	elif [ "$getAudio" != "0" ] && [ "$getVideo" != "0" ]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
 		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
 		echo "Cleaning up the mess I've made..."
