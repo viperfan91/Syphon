@@ -34,7 +34,7 @@ function installDL {
 		#generate latest youtube-dl download URL
 		baseURL=$(curl -s https://yt-dl.org/downloads/latest)
 		newURL=${baseURL##<!*f\=\"} #"
-		newerURL=${newURL%%\">*l>}
+		newerURL=${newURL%%\">*l>} #"
 		progURL=$(echo $newerURL'/youtube-dl')
 		# Use generated URL and store wether it was successful
 		usrLOCALcheck=$(cd /usr/local/bin > /dev/null 2>&1; echo $?)
