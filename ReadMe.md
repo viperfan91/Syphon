@@ -9,7 +9,8 @@ All of the YouTube downloaders I've used in the past have all had something miss
 
 Things to do:
 =============
-1. Grab video Title and display upon loading to make the process a little for professional.
+1. Handle video titles with various punctuations
+2. Grab video Title and display upon loading to make the process a little for professional.
 
 
 Things Completed:
