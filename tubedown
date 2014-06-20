@@ -33,8 +33,8 @@ function installDL {
 		echo 'Downloading youtube-dl...'
 		#generate latest youtube-dl download URL
 		baseURL=$(curl -s https://yt-dl.org/downloads/latest)
-		newURL=${baseURL##<!*f\=\"} #"
-		newerURL=${newURL%%\">*l>} #"
+		newURL=${baseURL##<!*f\=\"} #" <--This is so that the code displays properly on GitHub
+		newerURL=${newURL%%\">*l>} #" <--This is so that the code displays properly on GitHub
 		progURL=$(echo $newerURL'/youtube-dl')
 		# Use generated URL and store wether it was successful
 		usrLOCALcheck=$(cd /usr/local/bin > /dev/null 2>&1; echo $?)
@@ -125,8 +125,8 @@ elif [ "$whichAreInstalled" == "01" ]; then
 			echo
 			echo 'Although this script will continue the downloaded file(s) may not play.'
 			echo 'Also, if both audio and video are downloaded the files will need to be combined.'
-			echo 'To avoid this check please add 'F' without quotes to the media type option. Ex: -aF or -avF'
-			echo 'You're download will begin shortly...'
+			echo 'To avoid this check please add "F" without quotes to the media type option. Ex: -aF or -avF'
+			echo 'Your download will begin shortly...'
 			echo
 			echo
 			sleep 20
@@ -164,7 +164,7 @@ success=1
 i=0
 until [ $success == 0 ]; do
 	if echo "$qualityCheck" | grep -q ${audioOptions[$i]}; then
-    	#echo "matched";
+    	#echo "matched with: ${audioOptions[$i]}";
     	success="0"
 	else
     	#echo "no match";
@@ -184,7 +184,7 @@ echo 'Finding best video...'
 success=1
 i=0
 until [ $success == 0 ]; do
-	if echo "$qualityCheck" | grep -q ${audioOptions[$i]}; then
+	if echo "$qualityCheck" | grep -q ${videoOptions[$i]}; then
     	#echo "matched";
     	success="0"
 	else
@@ -192,7 +192,7 @@ until [ $success == 0 ]; do
     	i=$i+1
 	fi
 done
-youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?
+youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
@@ -213,7 +213,13 @@ if [[ $success == 0 ]]; then
 	
 	# Convert downloaded file(s) into something usable
 	echo 'Converting...'
-	if [[ "$getAudio" != "0" ]]; then
+	if [ "$getAudio" != "0" ] && [ "$getVideo" != "0" ]; then
+		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		echo 'Cleaning up the mess I made...'
+		rm "$tubeAudioFile"
+		rm "$tubeVideoFile"
+	elif [[ "$getAudio" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
 		ffmpeg -loglevel quiet -i "$tubeAudioFile" "$convertedFileName"
 		echo 'Cleaning up the mess I made...'
@@ -222,12 +228,6 @@ if [[ $success == 0 ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
 		ffmpeg -loglevel quiet -i "$tubeVideoFile" "$convertedFileName"
 		echo 'Cleaning up the mess I made...'
-		rm "$tubeVideoFile"
-	elif [ "$getAudio" != "0" ] && [ "$getVideo" != "0" ]; then
-		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
-		echo 'Cleaning up the mess I made...'
-		rm "$tubeAudioFile"
 		rm "$tubeVideoFile"
 	fi
 fi
