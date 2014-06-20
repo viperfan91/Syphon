@@ -9,8 +9,8 @@ All of the YouTube downloaders I've used in the past have all had something miss
 
 Things to do:
 =============
-1. Speed up the quality check process.
-2. Grab video Title and display upon loading to make the process a little for professional.
+1. Grab video Title and display upon loading to make the process a little for professional.
+
 
 Things Completed:
 =================
@@ -23,3 +23,5 @@ Things Completed:
 • Check for and install FFmpeg
 
 • Check for and, if not found, create local/bin folders inside /usr
+
+• Speed up the quality check process.
