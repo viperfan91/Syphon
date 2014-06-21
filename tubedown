@@ -27,14 +27,14 @@ whichAreInstalled="$youtubedlInstalled""$ffmpegInstalled"
 # Declare install functions
 function installDL {
 		# Install youtube-dl
-		echo 'You will be asked for your password multiple times during installation.'
+		echo 'You may be asked for your password multiple times during installation.'
 		echo
 		sleep 3
 		echo 'Downloading youtube-dl...'
 		#generate latest youtube-dl download URL
 		baseURL=$(curl -s https://yt-dl.org/downloads/latest)
-		newURL=${baseURL##<!*f\=\"} #" <--This is so that the code displays properly on GitHub
-		newerURL=${newURL%%\">*l>} #" <--This is so that the code displays properly on GitHub
+		newURL=${baseURL##<!*f\=\"} #" <-- This commented quote is so that the code displays properly on GitHub
+		newerURL=${newURL%%\">*l>} #" <--This commented quote is so that the code displays properly on GitHub
 		progURL=$(echo $newerURL'/youtube-dl')
 		# Use generated URL and store wether it was successful
 		usrLOCALcheck=$(cd /usr/local/bin > /dev/null 2>&1; echo $?)
@@ -204,29 +204,38 @@ if [ "$ffmpegInstalled" == "0" ]; then
 if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded.
 	echo 'Managing file(s)...'
+	theVideoName=$(youtube-dl -e https://www.youtube.com/watch?v=_dShO1I2Ml0)
+	theVideoID=${myTubeURL#h*=}
+	echo
+	echo "The video title: $theVideoName"
+	echo "The video id: $theVideoID"
+	echo
+	echo "The filename is: "${theVideoName////_}"-"$theVideoID".m4a"
 	if [[ "$getAudio" != "0" ]]; then
-		tubeAudioFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".m4a")
+		tubeAudioFile=$(echo ${theVideoName////_}"-"$theVideoID".m4a")
+		echo $tubeAudioFile
 	fi
 	if [[ "$getVideo" != "0" ]]; then
-		tubeVideoFile=$(echo $(youtube-dl -e $myTubeURL)"-"$(youtube-dl --get-id $myTubeURL)".mp4")
+		tubeVideoFile=$(echo ${theVideoName////_}"-"$theVideoID".mp4")
+		echo $tubeVideoFile
 	fi
 	
 	# Convert downloaded file(s) into something usable
 	echo 'Converting...'
 	if [ "$getAudio" != "0" ] && [ "$getVideo" != "0" ]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "${theVideoName////_}.mp4"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeAudioFile"
 		rm "$tubeVideoFile"
 	elif [[ "$getAudio" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" "${theVideoName////_}.mp4"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeAudioFile"
 	elif [[ "$getVideo" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -loglevel quiet -i "$tubeVideoFile" "$convertedFileName"
+		ffmpeg -loglevel quiet -i "$tubeVideoFile" "${theVideoName////_}.mp4"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeVideoFile"
 	fi
