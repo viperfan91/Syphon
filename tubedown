@@ -199,6 +199,10 @@ fi
 #--------------------------------------------------------------------------------------------------------------------------------
 # Begin code for handling downloaded files
 #-----------------------------------------
+# Notes: redo file handing and conversion using
+# "ls *$theVideoID.m4a" & "ls *$theVideoID.mp4"
+# test to see if that works
+#-----------------------------------------
 if [ "$ffmpegInstalled" == "0" ]; then
 # Check if anything was downloaded
 if [[ $success == 0 ]]; then
