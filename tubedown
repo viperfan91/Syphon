@@ -210,20 +210,22 @@ if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded.
 	echo 'Managing file(s)...'
 	theVideoName=$(youtube-dl -e $myTubeURL)
-	vName1=${theVideoName////_}
-	vName2=${vName1//:/' -'}
-	theVideoID=${myTubeURL#h*=}
-	echo
-	echo "The video title: $theVideoName"
-	echo "The video id: $theVideoID"
-	echo
-	echo "The filename is: "$vName2"-"$theVideoID".m4a"
+	videoChar=(":" ";" "\\" "/" "," "!" "@" "$" "%" "^" "*" "_" "--" "---" "end")
+	i=0
+	until [ "${videoChar[$i]}" == "end" ]; do
+	theVideoName=${theVideoName//"${videoChar[$i]}"/-}
+	i=$i+1
+	done
+	theVideoID=${myTubeURL#h*=} # Removes all but ID from URL with http
+	theVideoID=${theVideoID#www*=} #Removes all but ID from URL without http
+	theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www
+	echo $theVideoID
 	if [[ "$getAudio" != "0" ]]; then
-		tubeAudioFile=$(echo $vName2"-"$theVideoID".m4a")
+		tubeAudioFile=$(ls *"$theVideoID"".m4a")
 		echo $tubeAudioFile
 	fi
 	if [[ "$getVideo" != "0" ]]; then
-		tubeVideoFile=$(echo $vName2"-"$theVideoID".mp4")
+		tubeVideoFile=$(ls *"$theVideoID"".mp4")
 		echo $tubeVideoFile
 	fi
 	
@@ -231,18 +233,18 @@ if [[ $success == 0 ]]; then
 	echo 'Converting...'
 	if [ "$getAudio" != "0" ] && [ "$getVideo" != "0" ]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$vName2.mp4"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$theVideoName"".mp4"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeAudioFile"
 		rm "$tubeVideoFile"
 	elif [[ "$getAudio" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" "$vName2.m4a"
+		ffmpeg -i "$tubeAudioFile" "$theVideoName"".m4a"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeAudioFile"
 	elif [[ "$getVideo" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -loglevel quiet -i "$tubeVideoFile" "$vName2.mp4"
+		ffmpeg -loglevel quiet -i "$tubeVideoFile" "$theVideoName"".mp4"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeVideoFile"
 	fi
