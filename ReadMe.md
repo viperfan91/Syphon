@@ -9,8 +9,8 @@ All of the YouTube downloaders I've used in the past have all had something miss
 
 Things to do:
 =============
-1. Handle video title change with various punctuations
-2. Grab video Title and display upon loading to make the process a little more professional.
+1. Grab video Title and display upon loading to make the process a little more professional. 
+2. Add the ability to use only the video ID instead of needing full url
 
 
 Things Completed:
@@ -26,3 +26,5 @@ Things Completed:
 • Check for and, if not found, create local/bin folders inside /usr
 
 • Speed up the quality check process.
+
+• Handle video title change with various punctuations
