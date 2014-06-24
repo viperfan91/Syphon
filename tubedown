@@ -172,7 +172,7 @@ until [ $success == 0 ]; do
     	i=$i+1
 	fi
 done
-youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?
+youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1 #; echo $?
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
@@ -193,7 +193,7 @@ until [ $success == 0 ]; do
     	i=$i+1
 	fi
 done
-youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1; echo $?
+youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1 #; echo $?
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
@@ -219,14 +219,14 @@ if [[ $success == 0 ]]; then
 	theVideoID=${myTubeURL#h*=} # Removes all but ID from URL with http
 	theVideoID=${theVideoID#www*=} #Removes all but ID from URL without http
 	theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www
-	echo $theVideoID
+	#echo $theVideoID
 	if [[ "$getAudio" != "0" ]]; then
 		tubeAudioFile=$(ls *"$theVideoID"".m4a")
-		echo $tubeAudioFile
+		#echo $tubeAudioFile
 	fi
 	if [[ "$getVideo" != "0" ]]; then
 		tubeVideoFile=$(ls *"$theVideoID"".mp4")
-		echo $tubeVideoFile
+		#echo $tubeVideoFile
 	fi
 	
 	# Convert downloaded file(s) into something usable
