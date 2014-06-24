@@ -172,6 +172,7 @@ until [ $success == 0 ]; do
     	i=$i+1
 	fi
 done
+echo "Downloading audio..."
 youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1 #; echo $?
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
@@ -193,6 +194,7 @@ until [ $success == 0 ]; do
     	i=$i+1
 	fi
 done
+echo "Downloading video..."
 youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1 #; echo $?
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
