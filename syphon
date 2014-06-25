@@ -57,7 +57,7 @@ function installDL {
 			exit
 		else
 			# Download successful!
-			# Now it's time to set permissions to make the downloaded binary usable:
+			# Now it is time to set permissions to make the downloaded binary usable:
 			echo 'Installing...'
 			installAttempt=$(sudo chmod a+x /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
 			sleep 3
