@@ -108,7 +108,7 @@ elif [ "$whichAreInstalled" == "10" ]; then
 		installDL
 	elif [ "$installTube" == "n" ]; then
 		echo
-		echo 'Syphon can not continue without youtube-dl. Please re-run Syphon to install."
+		echo 'Syphon can not continue without youtube-dl. Please re-run Syphon to install.'
 		echo 'Have a nice day :)'
 		exit
 	fi
