@@ -1,6 +1,11 @@
-YouTube Downloader
+███████╗██╗   ██╗██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗
+██╔════╝╚██╗ ██╔╝██╔══██╗██║  ██║██╔═══██╗████╗  ██║
+███████╗ ╚████╔╝ ██████╔╝███████║██║   ██║██╔██╗ ██║
+╚════██║  ╚██╔╝  ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║
+███████║   ██║   ██║     ██║  ██║╚██████╔╝██║ ╚████║
+╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
 ======
-Download the highest quality possible from the video URL provided
+Download the highest quality possible from the YouTube URL provided
 
 Why:
 ====
