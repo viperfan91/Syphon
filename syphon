@@ -142,6 +142,41 @@ fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
+# Functions for creating a progress bar
+#--------------------------------------
+function myProgressBar() {
+	theSource=$(youtube-dl -f $1 -g $myTubeURL)
+	#echo $theSource
+	sourceBytes=$(curl -sI $theSource | grep Content-Length | awk '{print $2}')
+	#echo $sourceBytes
+	theSourceStringSize=${#sourceBytes}
+	#echo $theSourceStringSize
+	newStringSize=${sourceBytes:0:$theSourceStringSize-1}
+	newStringSize=$((newStringSize))
+	#echo "$newStringSize"
+	sleep 1
+	#echo "Starting Bar"
+	fileURL=$(ls *"$theVideoID"".$2"*)
+	#echo $fileURL
+	until [[ $theFileSize == $newStringSize ]]; do
+	if [[ $(ls "$fileURL" > /dev/null 2>&1; echo $?) == "0" ]]; then
+	theFileSize=$(stat -f%z "$fileURL")
+	theFileSize=$((theFileSize))
+	#echo "File is $theFileSize"
+	theTotal=$((100 * theFileSize / newStringSize))
+	#echo $theTotal
+	if [[ $theTotal > 95 ]]; then
+	break
+	fi
+	theBar=$(seq -f '#' -s '' $theTotal)
+	echo -ne $theBar" ($theTotal%)\r\c"
+	fi
+	done
+	echo $(seq -f '#' -s '' 100)" (100%)"
+}
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
 # Create arrays that contain possible quality options.
 # Arrays are ordered so that the highest possible options are tried frist.
 # itag values from http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
@@ -158,7 +193,11 @@ fi
 #--------------------------------------------------------------------------------------------------------------------------------
 # Grab the complete list of available qualities. Also, Serves as a check for the videos availability:
 #----------------------------------------------------------------------------------------------------
-qualityCheck=$(youtube-dl -F $myTubeURL)
+qualityCheck=$(youtube-dl -F $myTubeURL) # Add check for working url
+
+theVideoID=${myTubeURL#h*=} # Removes all but ID from URL with http.
+theVideoID=${theVideoID#www*=} #Removes all but ID from URL without http.
+theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www.
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
@@ -179,7 +218,7 @@ until [ $success == 0 ]; do
 	fi
 done
 echo "Downloading the audio..."
-youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1 #; echo $?
+youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1 & myProgressBar ${audioOptions[$i]} m4a
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
@@ -201,7 +240,7 @@ until [ $success == 0 ]; do
 	fi
 done
 echo "Downloading the video..."
-youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1 #; echo $?
+youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1 & myProgressBar ${videoOptions[$i]} mp4
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
@@ -212,6 +251,7 @@ if [ "$ffmpegInstalled" == "0" ]; then
 # Check if anything was downloaded:
 if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded:
+	sleep 1
 	echo 'Managing file(s)...'
 	theVideoName=$(youtube-dl -e $myTubeURL)
 	videoChar=(":" ";" "\\" "/" "," "!" "@" "$" "%" "^" "*" "_" "--" "---" "end")
@@ -220,9 +260,6 @@ if [[ $success == 0 ]]; then
 	theVideoName=${theVideoName//"${videoChar[$i]}"/-}
 	i=$i+1
 	done
-	theVideoID=${myTubeURL#h*=} # Removes all but ID from URL with http.
-	theVideoID=${theVideoID#www*=} #Removes all but ID from URL without http.
-	theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www.
 	#echo $theVideoID
 	if [[ "$getAudio" != "0" ]]; then
 		tubeAudioFile=$(ls *"$theVideoID"".m4a")
@@ -243,7 +280,7 @@ if [[ $success == 0 ]]; then
 		rm "$tubeVideoFile"
 	elif [[ "$getAudio" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
-		ffmpeg -i "$tubeAudioFile" "$theVideoName"".m4a"
+		ffmpeg -loglevel quiet -i "$tubeAudioFile" "$theVideoName"".m4a"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeAudioFile"
 	elif [[ "$getVideo" != "0" ]]; then
