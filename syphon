@@ -6,7 +6,16 @@ echo
 echo 'Initializing...'
 # Define CL input
 saveMediaType=$1
+URLorID=$(echo $2|awk '{print match($0, "youtube.com/watch")}')
+if [[ $URLorID != "0" ]]; then
+echo "Full URL"
 myTubeURL=$2
+echo $myTubeURL
+else
+echo "ID only"
+myTubeURL="www.youtube.com/watch?v=$2"
+echo $myTubeURL
+fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
@@ -144,7 +153,7 @@ fi
 #--------------------------------------------------------------------------------------------------------------------------------
 # Functions for creating a progress bar
 #--------------------------------------
-function myProgressBar() {
+function myProgressBar() { # Usage: youtube-dl(process) & myProgressBar [itag#] [fileExt]
 	theSource=$(youtube-dl -f $1 -g $myTubeURL)
 	#echo $theSource
 	sourceBytes=$(curl -sI $theSource | grep Content-Length | awk '{print $2}')
@@ -154,7 +163,7 @@ function myProgressBar() {
 	newStringSize=${sourceBytes:0:$theSourceStringSize-1}
 	newStringSize=$((newStringSize))
 	#echo "$newStringSize"
-	sleep 1
+	#sleep 1
 	#echo "Starting Bar"
 	fileURL=$(ls *"$theVideoID"".$2"*)
 	#echo $fileURL
@@ -193,8 +202,13 @@ fi
 #--------------------------------------------------------------------------------------------------------------------------------
 # Grab the complete list of available qualities. Also, Serves as a check for the videos availability:
 #----------------------------------------------------------------------------------------------------
-qualityCheck=$(youtube-dl -F $myTubeURL) # Add check for working url
-
+URLCheck=$(youtube-dl -F $myTubeURL > /dev/null 2>&1; echo $?)
+if [[ $URLCheck != 0 ]]; then
+echo "It seems the URL does not work. Please check it and try again."
+exit
+else
+qualityCheck=$(youtube-dl -F $myTubeURL)
+fi
 theVideoID=${myTubeURL#h*=} # Removes all but ID from URL with http.
 theVideoID=${theVideoID#www*=} #Removes all but ID from URL without http.
 theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www.
