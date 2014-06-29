@@ -8,13 +8,13 @@ echo 'Initializing...'
 saveMediaType=$1
 URLorID=$(echo $2|awk '{print match($0, "youtube.com/watch")}')
 if [[ $URLorID != "0" ]]; then
-echo "Full URL"
+#echo "Full URL"
 myTubeURL=$2
-echo $myTubeURL
+#echo $myTubeURL
 else
-echo "ID only"
+#echo "ID only"
 myTubeURL="www.youtube.com/watch?v=$2"
-echo $myTubeURL
+#echo $myTubeURL
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
