@@ -28,3 +28,5 @@ Things Completed:
 • Speed up the quality check process.
 
 • Handle video title change with various punctuations
+
+• Added progress bar for downloads
