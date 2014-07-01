@@ -181,7 +181,7 @@ function myProgressBar() { # Usage: youtube-dl(process) & myProgressBar [itag#] 
 	if [[ $(ls "$fileURL" > /dev/null 2>&1; echo $?) == "0" ]]; then
 	if [[ $whichOS == 'Debian' ]]; then
 	theFileSize=$(stat -f%z "$fileURL")
-	elif [[ $whichOS == 'Linux' ]];
+	elif [[ $whichOS == 'Linux' ]]; then
 	theFileSize=$(stat --format=%s "$fileURL")
 	fi
 	theFileSize=$((theFileSize))
