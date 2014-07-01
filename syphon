@@ -177,25 +177,35 @@ function myProgressBar() { # Usage: youtube-dl(process) & myProgressBar [itag#] 
 	#echo "Starting Bar"
 	fileURL=$(ls *"$theVideoID"".$2"*)
 	#echo $fileURL
-	until [[ $theFileSize == $newStringSize ]]; do
-	if [[ $(ls "$fileURL" > /dev/null 2>&1; echo $?) == "0" ]]; then
 	if [[ $whichOS == 'Debian' ]]; then
-	theFileSize=$(stat -f%z "$fileURL")
-	elif [[ $whichOS == 'Linux' ]]; then
-	theFileSize=$(stat --format=%s "$fileURL")
-	fi
-	theFileSize=$((theFileSize))
-	#echo "File is $theFileSize"
-	theTotal=$((100 * theFileSize / newStringSize))
-	#echo $theTotal
-	if [[ $theTotal > 95 ]]; then
-	break
-	fi
-	theBar=$(seq -f '#' -s '' $theTotal)
-	echo -ne $theBar" ($theTotal%)\r\c"
-	fi
-	done
+		until [[ $theFileSize == $newStringSize ]]; do
+			if [[ $(ls "$fileURL" > /dev/null 2>&1; echo $?) == "0" ]]; then
+				theFileSize=$(stat -f%z "$fileURL")
+				theFileSize=$((theFileSize))
+				#echo "File is $theFileSize"
+				theTotal=$((100 * theFileSize / newStringSize))
+				#echo $theTotal
+			if [[ $theTotal > 95 ]]; then
+				break
+			fi
+			theBar=$(seq -f '#' -s '' $theTotal)
+			echo -ne $theBar" ($theTotal%)\r\c"
+			fi
+		done
 	echo $(seq -f '#' -s '' 100)" (100%)"
+	elif [[ $whichOS == 'Linux' ]]; then
+		until [[ $theFileSize == $newStringSize ]]; do
+			theFileSize=$(stat --format=%s "$fileURL")
+			echo -ne "Downloading.  \r\c"
+			sleep .1
+			echo -ne "Downloading.. \r\c"
+			sleep .1
+			echo -ne "Downloading...\r\c"
+			sleep .1
+			echo -ne "Downloading   \r\c"
+			sleep .1
+		done
+	fi
 }
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
