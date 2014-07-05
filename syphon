@@ -175,24 +175,28 @@ function myProgressBar() { # Usage: youtube-dl(process) & myProgressBar [itag#] 
 	#echo "$newStringSize"
 	#sleep 1
 	#echo "Starting Bar"
-	fileURL=$(ls *"$theVideoID"".$2"*)
-	#echo $fileURL
-	if [[ $whichOS == 'Debian' ]]; then
+	if [[ $whichOS == 'Darwin' ]]; then
 		until [[ $theFileSize == $newStringSize ]]; do
-			if [[ $(ls "$fileURL" > /dev/null 2>&1; echo $?) == "0" ]]; then
+			if [[ $(ls *"$theVideoID"".$2"* > /dev/null 2>&1; echo $?) == "0" ]]; then
+				fileURL=$(ls *"$theVideoID"".$2"*)
+				#echo $fileURL
 				theFileSize=$(stat -f%z "$fileURL")
 				theFileSize=$((theFileSize))
 				#echo "File is $theFileSize"
 				theTotal=$((100 * theFileSize / newStringSize))
 				#echo $theTotal
-			if [[ $theTotal > 95 ]]; then
-				break
-			fi
-			theBar=$(seq -f '#' -s '' $theTotal)
-			echo -ne $theBar" ($theTotal%)\r\c"
+				if [[ $theTotal == "0" ]]; then
+					theTotal="1" # This fixes a display issue for when the progress is 0% - .9%
+				fi
+				if [[ $theTotal -ge 99 ]]; then
+					sleep 2
+					break
+				fi
+				theBar=$(seq -f '#' -s '' $theTotal)
+				echo -ne $theBar" ($theTotal%)\r\c"	
 			fi
 		done
-	echo $(seq -f '#' -s '' 100)" (100%)"
+		#echo $(seq -f '#' -s '' 100)" (100%)"
 	elif [[ $whichOS == 'Linux' ]]; then
 		until [[ $theFileSize == $newStringSize ]]; do
 			theFileSize=$(stat --format=%s "$fileURL")
@@ -257,6 +261,7 @@ until [ $success == 0 ]; do
 done
 echo "Downloading the audio..."
 youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1 & myProgressBar ${audioOptions[$i]} m4a
+echo $(seq -f '#' -s '' 100)" (100%)" # Makes sure it displays 100% when done
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
@@ -279,6 +284,7 @@ until [ $success == 0 ]; do
 done
 echo "Downloading the video..."
 youtube-dl -q -f ${videoOptions[$i]} $myTubeURL > /dev/null 2>&1 & myProgressBar ${videoOptions[$i]} mp4
+echo $(seq -f '#' -s '' 100)" (100%)" # Make sure it displays 100% when done
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
