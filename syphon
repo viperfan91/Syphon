@@ -1,86 +1,110 @@
 #!/bin/bash
-# Syphon (A YouTube downloader powered by youtube-dl [http://rg3.github.io/youtube-dl/]) and FFmpeg [http://www.ffmpeg.org]
+# Syphon (A YouTube downloader powered by youtube-dl [http://rg3.github.io/youtube-dl/] and FFmpeg [http://www.ffmpeg.org])
 # Script Written by Calvin Barrie (viperfan91) with contributions by Darrigan
-echo
+#echo $#
 
+#███████╗██╗   ██╗██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗
+#██╔════╝╚██╗ ██╔╝██╔══██╗██║  ██║██╔═══██╗████╗  ██║
+#███████╗ ╚████╔╝ ██████╔╝███████║██║   ██║██╔██╗ ██║
+#╚════██║  ╚██╔╝  ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║
+#███████║   ██║   ██║     ██║  ██║╚██████╔╝██║ ╚████║
+#╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
+clear
 echo 'Initializing...'
+echo
+sleep 1
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
-# Define OS
-#----------
-whichOS=$(echo `uname`)
-#--------------------------------------------------------------------------------------------------------------------------------
-#********************************************************************************************************************************
-#--------------------------------------------------------------------------------------------------------------------------------
-# Define CL input
+# Declare functions
+#------------------
+function displayLogo () {
+	logoText=$2
+	logoWire=$3
+	if [[ $1 == "full" || $1 == "1" ]]; then
+	printf "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗   \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██████\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗  \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██████\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m███\e[0;"${logoWire}"m╗   \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\n"
+	fi
+	if [[ $1 == "full" || $1 == "2" ]]; then
+	printf "\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔════╝╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔══\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m║  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔═══\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m████\e[0;"${logoWire}"m╗  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\n"
+	fi
+	if [[ $1 == "full" || $1 == "3" ]]; then
+	printf "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m╗ ╚\e[0;"${logoText}"m████\e[0;"${logoWire}"m╔╝ \e[0;"${logoText}"m██████\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m███████\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\n"
+	fi
+	if [[ $1 == "full" || $1 == "4" ]]; then
+	printf "\e[0;"${logoWire}"m╚════\e[0;"${logoText}"m██\e[0;"${logoWire}"m║  ╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔╝  \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔═══╝ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔══\e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m║\n"
+	fi
+	if [[ $1 == "full" || $1 == "5" ]]; then
+	printf "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║     \e[0;"${logoText}"m██\e[0;"${logoWire}"m║  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║╚\e[0;"${logoText}"m██████\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m██\e[0;"${logoWire}"m║ ╚\e[0;"${logoText}"m████\e[0;"${logoWire}"m║\n"
+	fi
+	if [[ $1 == "full" || $1 == "6" ]]; then
+	printf "\e[0;"${logoWire}"m╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝\e[0m\n\n"
+	fi
+}
+function displayUsage () {
+	displayLogo full
+	echo
+	echo 'Usage: syphon [media type: -a, -v, -av] [YouTube URL]'
+	exit
+}
 #----------------
-saveMediaType=$1
-URLorID=$(echo $2|awk '{print match($0, "youtube.com/watch")}')
-if [[ $URLorID != "0" ]]; then
-#echo "Full URL"
-myTubeURL=$2
-#echo $myTubeURL
-else
-#echo "ID only"
-myTubeURL="www.youtube.com/watch?v=$2"
-#echo $myTubeURL
-fi
-#--------------------------------------------------------------------------------------------------------------------------------
-#********************************************************************************************************************************
-#--------------------------------------------------------------------------------------------------------------------------------
-# Check to see if youtube-dl is installed.
-# If it is not then ask if the user wants to install it:
-youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
-if [ "$youtubedlInstalled" != "1" ]; then
-	if [ "$youtubedlInstalled" != "0" ]; then
-	youtubedlInstalled="1"
-	fi
-fi
-ffmpegInstalled=$(ffmpeg -h > /dev/null 2>&1; echo $?)
-if [ "$ffmpegInstalled" != 1 ]; then
-	if [ "$ffmpegInstalled" != 0 ]; then
-	ffmpegInstalled="1"
-	fi
-fi
-whichAreInstalled="$youtubedlInstalled""$ffmpegInstalled"
-# Declare install functions:
+# Error functions
+#-------------------------------------------------------------------------------------
+# Error functions may be combined with other functions. 
+# Example 1 will display, in red, the message provided as well as making it blink.
+# Example 1: attentionGetter $(displayError "INSERT ERROR MESSAGE HERE")
+# Example 2 will display the standard usage rules, but in red type.
+# Example 2: displayError $(displayUsage)
+# All functions after the first one called in the same command must be inclosed in $().
+# However, you must be mindful of what is called inside the secondary functions as 
+# actions commands, such as "exit" or "clear", will not work.
+#-------------------------------------------------------------------------------------
+function displayError () {
+	printf "\n\e[31m$*\e[0m"
+	echo
+}
+function attentionGetter () {
+	printf "\e[5m$*\e[0m"
+	echo
+}
+#------------------
+# Install functions
+#------------------
 function installDL {
-		# Install youtube-dl
-		echo 'You may be asked for your password multiple times during installation.'
+	# Install youtube-dl:
+	echo 'You may be asked for your password multiple times during installation.'
+	echo
+	sleep 3
+	echo 'Downloading youtube-dl...'
+	#************** Generate latest youtube-dl download URL **************
+	baseURL=$(curl -s https://yt-dl.org/downloads/latest)
+	newURL=${baseURL##<!*f\=\"} #" <-- This commented quote is so that the code displays properly on GitHub
+	newerURL=${newURL%%\">*l>} #" <--This commented quote is so that the code displays properly on GitHub
+	progURL=$(echo $newerURL'/youtube-dl')
+	#*********************************************************************
+	# Use generated URL and store wether it was successful:
+	usrLOCALcheck=$(cd /usr/local/bin > /dev/null 2>&1; echo $?)
+	if [ "$usrLOCALcheck" == "1" ]; then
+		sudo mkdir -p /usr/local/bin
+	fi
+	downloadAttempt=$(sudo curl $progURL -o /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
+	if [ "$downloadAttempt" != "0" ]; then
+		# Command came back something other than '0' which means something went wrong.
+		# Prompt user with the command to download youtube-dl manually to see what goes wrong:
 		echo
+		echo 'Something went wrong.'
+		echo 'Please install youtube-dl manually with these two commands to see what went wrong.'
+		echo
+		echo "sudo curl $progURL -o /usr/local/bin/youtube-dl"
+		echo "sudo chmod a+x /usr/local/bin/youtube-dl"
+		echo
+		exit
+	else
+		# Download successful!
+		# Now it is time to set permissions to make the downloaded binary usable:
+		echo 'Installing...'
+		installAttempt=$(sudo chmod a+x /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
 		sleep 3
-		echo 'Downloading youtube-dl...'
-		#************** Generate latest youtube-dl download URL **************
-		baseURL=$(curl -s https://yt-dl.org/downloads/latest)
-		newURL=${baseURL##<!*f\=\"} #" <-- This commented quote is so that the code displays properly on GitHub
-		newerURL=${newURL%%\">*l>} #" <--This commented quote is so that the code displays properly on GitHub
-		progURL=$(echo $newerURL'/youtube-dl')
-		#*********************************************************************
-		# Use generated URL and store wether it was successful:
-		usrLOCALcheck=$(cd /usr/local/bin > /dev/null 2>&1; echo $?)
-		if [ "$usrLOCALcheck" == "1" ]; then
-			sudo mkdir -p /usr/local/bin
-		fi
-		downloadAttempt=$(sudo curl $progURL -o /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
-		if [ "$downloadAttempt" != "0" ]; then
-			# Command came back something other than '0' which means something went wrong.
-			# Prompt user with the command to download youtube-dl manually to see what goes wrong:
-			echo
-			echo 'Something went wrong.'
-			echo 'Please install youtube-dl manually with these two commands to see what went wrong.'
-			echo
-			echo "sudo curl $progURL -o /usr/local/bin/youtube-dl"
-			echo "sudo chmod a+x /usr/local/bin/youtube-dl"
-			echo
-			exit
-		else
-			# Download successful!
-			# Now it is time to set permissions to make the downloaded binary usable:
-			echo 'Installing...'
-			installAttempt=$(sudo chmod a+x /usr/local/bin/youtube-dl > /dev/null 2>&1; echo $?)
-			sleep 3
-		fi
+	fi
 }
 function installFFmpeg {
 	# Install FFmpeg:
@@ -96,6 +120,124 @@ function installFFmpeg {
 	echo
 	exit
 }
+#--------------------
+# Generate video name
+#--------------------
+function genVideoName {
+	theVideoName=$(youtube-dl -e $myTubeURL)
+	videoChar=(":" ";" "\\" "/" "," "!" "@" "$" "%" "^" "*" "_" "--" "---" "end")
+	i=0
+	until [ "${videoChar[$i]}" == "end" ]; do
+		theVideoName=${theVideoName//"${videoChar[$i]}"/-}
+		i=$i+1
+	done
+}
+#--------------------
+# Create progress bar
+#--------------------
+function myProgressBar () { # Usage: youtube-dl(process) & myProgressBar [itag#] [fileExt]
+	theSource=$(youtube-dl -f $1 -g $myTubeURL)
+	#echo $theSource
+	sourceBytes=$(curl -sI $theSource | grep Content-Length | awk '{print $2}')
+	#echo $sourceBytes
+	sourceSizeOrig=${#sourceBytes}
+	#echo $theSourceStringSize
+	sourceSize=${sourceBytes:0:$sourceSizeOrig-1}
+	sourceSize=$((newStringSize))
+	#echo "$newStringSize"
+	#sleep 1
+	#echo "Starting Bar"
+	if [[ $whichOS == 'Darwin' ]]; then
+		until [[ $theFileSize == $newStringSize ]]; do
+			if [[ $(ls *"$theVideoID"".$2"* > /dev/null 2>&1; echo $?) == "0" ]]; then
+				#fileURL=$(ls *"$theVideoID"".$2"*)
+				#echo $fileURL
+				theFileSize=$(stat -f%z $(ls *"$theVideoID"".$2"*))
+				theFileSize=$((theFileSize))
+				#echo "File is $theFileSize"
+				theTotal=$((100 * theFileSize / sourceSize))
+				#echo $theTotal
+				if [[ $theTotal == "0" ]]; then
+					theTotal="1" # This fixes a display issue for when the progress is 0% - .9%
+				fi
+				if [[ $theTotal -ge 99 ]]; then
+					sleep 2
+					break
+				fi
+				theBar=$(seq -f '#' -s '' $theTotal)
+				echo -ne $theBar" ($theTotal%)\r\c"	
+			fi
+		done
+		#echo $(seq -f '#' -s '' 100)" (100%)"
+	elif [[ $whichOS == 'Linux' ]]; then
+		until [[ $theFileSize == $newStringSize ]]; do
+			theFileSize=$(stat --format=%s "$fileURL")
+			echo -ne "Downloading.  \r\c"
+			sleep .1
+			echo -ne "Downloading.. \r\c"
+			sleep .1
+			echo -ne "Downloading...\r\c"
+			sleep .1
+			echo -ne "Downloading   \r\c"
+			sleep .1
+		done
+	fi
+}
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
+# Define CL input
+#----------------
+#echo "These are the inputs $*"
+saveMediaType=$1
+if [[ $2 == "" ]]; then
+	displayUsage
+fi
+URLorID=$(echo $2|awk '{print match($0, "youtube.com/watch")}')
+if [[ $URLorID != "0" ]]; then
+#echo "Full URL"
+myTubeURL=$2
+#echo $myTubeURL
+else
+#echo "ID only"
+myTubeURL="www.youtube.com/watch?v=$2"
+#echo $myTubeURL
+fi
+# Double check input variables
+if [[ "$saveMediaType" != "-"* ]] || [[  "$myTubeURL" != *"youtube.com"* ]]; then
+	displayUsage
+fi
+#echo "███████╗██╗   ██╗██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗"
+displayLogo 1 #$logoTextColor $logoWireColor
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
+# Define OS
+#----------
+whichOS=$(echo `uname`)
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
+# Check to see if youtube-dl is installed.
+# If it is not then ask if the user wants to install it:
+#-------------------------------------------------------
+#echo "██╔════╝╚██╗ ██╔╝██╔══██╗██║  ██║██╔═══██╗████╗  ██║"
+displayLogo 2 #$logoTextColor $logoWireColor
+youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
+if [ "$youtubedlInstalled" != "1" ]; then
+	if [ "$youtubedlInstalled" != "0" ]; then
+		youtubedlInstalled="1"
+	fi
+fi
+ffmpegInstalled=$(ffmpeg -h > /dev/null 2>&1; echo $?)
+if [ "$ffmpegInstalled" != 1 ]; then
+	if [ "$ffmpegInstalled" != 0 ]; then
+		ffmpegInstalled="1"
+	fi
+fi
+#echo "███████╗ ╚████╔╝ ██████╔╝███████║██║   ██║██╔██╗ ██║"
+displayLogo 3 #$logoTextColor $logoWireColor
+whichAreInstalled="$youtubedlInstalled""$ffmpegInstalled"
 if [ "$whichAreInstalled" == "11" ]; then
 	echo
 	echo 'Looks like you have neither youtube-dl nor FFmpeg installed!'
@@ -161,82 +303,46 @@ fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
-# Functions for creating a progress bar
-#--------------------------------------
-function myProgressBar() { # Usage: youtube-dl(process) & myProgressBar [itag#] [fileExt]
-	theSource=$(youtube-dl -f $1 -g $myTubeURL)
-	#echo $theSource
-	sourceBytes=$(curl -sI $theSource | grep Content-Length | awk '{print $2}')
-	#echo $sourceBytes
-	theSourceStringSize=${#sourceBytes}
-	#echo $theSourceStringSize
-	newStringSize=${sourceBytes:0:$theSourceStringSize-1}
-	newStringSize=$((newStringSize))
-	#echo "$newStringSize"
-	#sleep 1
-	#echo "Starting Bar"
-	if [[ $whichOS == 'Darwin' ]]; then
-		until [[ $theFileSize == $newStringSize ]]; do
-			if [[ $(ls *"$theVideoID"".$2"* > /dev/null 2>&1; echo $?) == "0" ]]; then
-				fileURL=$(ls *"$theVideoID"".$2"*)
-				#echo $fileURL
-				theFileSize=$(stat -f%z "$fileURL")
-				theFileSize=$((theFileSize))
-				#echo "File is $theFileSize"
-				theTotal=$((100 * theFileSize / newStringSize))
-				#echo $theTotal
-				if [[ $theTotal == "0" ]]; then
-					theTotal="1" # This fixes a display issue for when the progress is 0% - .9%
-				fi
-				if [[ $theTotal -ge 99 ]]; then
-					sleep 2
-					break
-				fi
-				theBar=$(seq -f '#' -s '' $theTotal)
-				echo -ne $theBar" ($theTotal%)\r\c"	
-			fi
-		done
-		#echo $(seq -f '#' -s '' 100)" (100%)"
-	elif [[ $whichOS == 'Linux' ]]; then
-		until [[ $theFileSize == $newStringSize ]]; do
-			theFileSize=$(stat --format=%s "$fileURL")
-			echo -ne "Downloading.  \r\c"
-			sleep .1
-			echo -ne "Downloading.. \r\c"
-			sleep .1
-			echo -ne "Downloading...\r\c"
-			sleep .1
-			echo -ne "Downloading   \r\c"
-			sleep .1
-		done
-	fi
-}
+# 
+#
+URLCheck=$(youtube-dl --get-id $myTubeURL > /dev/null 2>&1; echo $?)
+if [[ $URLCheck != 0 ]]; then
+attentionGetter $(displayError "It seems the URL or video ID does not work. Please check it and try again.")
+exit
+fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
 # Create arrays that contain possible quality options.
 # Arrays are ordered so that the highest possible options are tried frist.
 # itag values from http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs
+#-------------------------------------------------------------------------
 audioOptions=("141" "140" "139")
 videoOptions=("264" "137" "136" "135" "134" "133" "160")
-# Double check input variables
-if [[ "$saveMediaType" != "-"* ]] || [[  "$myTubeURL" != *"youtube.com"* ]]; then
-	echo
-	echo 'Usage: syphon [media type: -a, -v, -av] [YouTube URL]'
+#--------------------------------------------------------------------------------------------------------------------------------
+#********************************************************************************************************************************
+#--------------------------------------------------------------------------------------------------------------------------------
+# Check to see if video is already downloaded in the current directory
+#---------------------------------------------------------------------
+#echo "╚════██║  ╚██╔╝  ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║"
+displayLogo 4 #$logoTextColor $logoWireColor
+genVideoName
+if [[ $(ls *"$theVideoName""."* > /dev/null 2>&1; echo $?) == "0" ]]; then
+	if [[ $saveMediaType == *"v"* ]]; then
+		displayError "This video is already in this directory. Please move, delete, or rename the file if you wish to download it again."
+	else
+		displayError "This audio is already in this directory. Please move, delete, or rename the file if you wish to download it again."
+	fi
 	exit
 fi
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
-# Grab the complete list of available qualities. Also, Serves as a check for the videos availability:
-#----------------------------------------------------------------------------------------------------
-URLCheck=$(youtube-dl -F $myTubeURL > /dev/null 2>&1; echo $?)
-if [[ $URLCheck != 0 ]]; then
-echo "It seems the URL does not work. Please check it and try again."
-exit
-else
+# Grab the complete list of available qualities.
+#-----------------------------------------------
+#echo "███████║   ██║   ██║     ██║  ██║╚██████╔╝██║ ╚████║"
+displayLogo 5 #$logoTextColor $logoWireColor
 qualityCheck=$(youtube-dl -F $myTubeURL)
-fi
 theVideoID=${myTubeURL#h*=} # Removes all but ID from URL with http.
 theVideoID=${theVideoID#www*=} #Removes all but ID from URL without http.
 theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www.
@@ -245,6 +351,8 @@ theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www.
 #--------------------------------------------------------------------------------------------------------------------------------
 # Begin code for downloading the audio from YouTube:
 #--------------------------------------------------
+#echo "╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
+displayLogo 6 #$logoTextColor $logoWireColor
 getAudio=$(echo $saveMediaType|awk '{print match($0, "a")}')
 if [[ "$getAudio" != "0" ]]; then
 echo 'Finding the best audio...'
@@ -259,6 +367,7 @@ until [ $success == 0 ]; do
     	i=$i+1
 	fi
 done
+sleep 1
 echo "Downloading the audio..."
 youtube-dl -q -f ${audioOptions[$i]} $myTubeURL > /dev/null 2>&1 & myProgressBar ${audioOptions[$i]} m4a
 echo $(seq -f '#' -s '' 100)" (100%)" # Makes sure it displays 100% when done
@@ -297,14 +406,6 @@ if [[ $success == 0 ]]; then
 	# Declare the variable for the files that have been downloaded:
 	sleep 1
 	echo 'Managing file(s)...'
-	theVideoName=$(youtube-dl -e $myTubeURL)
-	videoChar=(":" ";" "\\" "/" "," "!" "@" "$" "%" "^" "*" "_" "--" "---" "end")
-	i=0
-	until [ "${videoChar[$i]}" == "end" ]; do
-	theVideoName=${theVideoName//"${videoChar[$i]}"/-}
-	i=$i+1
-	done
-	#echo $theVideoID
 	if [[ "$getAudio" != "0" ]]; then
 		tubeAudioFile=$(ls *"$theVideoID"".m4a")
 		#echo $tubeAudioFile
