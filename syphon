@@ -2,50 +2,100 @@
 # Syphon (A YouTube downloader powered by youtube-dl [http://rg3.github.io/youtube-dl/] and FFmpeg [http://www.ffmpeg.org])
 # Script Written by Calvin Barrie (viperfan91) with contributions by Darrigan
 #echo $#
-
+# The command below displays every actions the script does. It's "verbose mode" if you will
+#set -x
 #███████╗██╗   ██╗██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗
 #██╔════╝╚██╗ ██╔╝██╔══██╗██║  ██║██╔═══██╗████╗  ██║
 #███████╗ ╚████╔╝ ██████╔╝███████║██║   ██║██╔██╗ ██║
 #╚════██║  ╚██╔╝  ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║
 #███████║   ██║   ██║     ██║  ██║╚██████╔╝██║ ╚████║
 #╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝
-clear
-echo 'Initializing...'
-echo
-sleep 1
+
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
 # Declare functions
 #------------------
+# Define OS
+#----------
+whichOS=$(echo `uname`)
+function echoThis () {
+if [[ $whichOS == 'Darwin' ]]; then
+	printf "$*\n"
+elif [[ $whichOS == 'Linux' ]]; then
+	echo -e "$*"
+else
+	echo "This is embarrassing. I haven't planned for this OS. Good Luck!"
+fi
+}
 function displayLogo () {
+	#echo "Logo Text: $2"
+	#echo "Logo Wire: $3"
 	logoText=$2
 	logoWire=$3
 	if [[ $1 == "full" || $1 == "1" ]]; then
-	printf "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗   \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██████\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗  \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██████\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m███\e[0;"${logoWire}"m╗   \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\n"
+	echoThis "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗   \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██████\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗  \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██████\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m███\e[0;"${logoWire}"m╗   \e[0;"${logoText}"m██\e[0;"${logoWire}"m╗"
 	fi
 	if [[ $1 == "full" || $1 == "2" ]]; then
-	printf "\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔════╝╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔══\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m║  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔═══\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m████\e[0;"${logoWire}"m╗  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\n"
+	echoThis "\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔════╝╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔══\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m║  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔═══\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m████\e[0;"${logoWire}"m╗  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║"
 	fi
 	if [[ $1 == "full" || $1 == "3" ]]; then
-	printf "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m╗ ╚\e[0;"${logoText}"m████\e[0;"${logoWire}"m╔╝ \e[0;"${logoText}"m██████\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m███████\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\n"
+	echoThis "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m╗ ╚\e[0;"${logoText}"m████\e[0;"${logoWire}"m╔╝ \e[0;"${logoText}"m██████\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m███████\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗ \e[0;"${logoText}"m██\e[0;"${logoWire}"m║"
 	fi
 	if [[ $1 == "full" || $1 == "4" ]]; then
-	printf "\e[0;"${logoWire}"m╚════\e[0;"${logoText}"m██\e[0;"${logoWire}"m║  ╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔╝  \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔═══╝ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔══\e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m║\n"
+	echoThis "\e[0;"${logoWire}"m╚════\e[0;"${logoText}"m██\e[0;"${logoWire}"m║  ╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╔╝  \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔═══╝ \e[0;"${logoText}"m██\e[0;"${logoWire}"m╔══\e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║\e[0;"${logoText}"m██\e[0;"${logoWire}"m║╚\e[0;"${logoText}"m██\e[0;"${logoWire}"m╗\e[0;"${logoText}"m██\e[0;"${logoWire}"m║"
 	fi
 	if [[ $1 == "full" || $1 == "5" ]]; then
-	printf "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║     \e[0;"${logoText}"m██\e[0;"${logoWire}"m║  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║╚\e[0;"${logoText}"m██████\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m██\e[0;"${logoWire}"m║ ╚\e[0;"${logoText}"m████\e[0;"${logoWire}"m║\n"
+	echoThis "\e[0;"${logoText}"m███████\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║   \e[0;"${logoText}"m██\e[0;"${logoWire}"m║     \e[0;"${logoText}"m██\e[0;"${logoWire}"m║  \e[0;"${logoText}"m██\e[0;"${logoWire}"m║╚\e[0;"${logoText}"m██████\e[0;"${logoWire}"m╔╝\e[0;"${logoText}"m██\e[0;"${logoWire}"m║ ╚\e[0;"${logoText}"m████\e[0;"${logoWire}"m║"
 	fi
 	if [[ $1 == "full" || $1 == "6" ]]; then
-	printf "\e[0;"${logoWire}"m╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝\e[0m\n\n"
+	echoThis "\e[0;"${logoWire}"m╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝\e[0m"
 	fi
 }
+function logoColors () {
+	for i in {30..37} {90..97}; do 
+		for j in {30..37} {90..97}; do 
+			displayLogo full $i $j
+			echo "Text: $i Wire: $j"
+		done
+	done
+}
 function displayUsage () {
-	displayLogo full
 	echo
-	echo 'Usage: syphon [media type: -a, -v, -av] [YouTube URL]'
+	displayLogo full $logoColors
+	echo 'Usage: syphon [options] -v [YouTube URL/ID]'
+	echo "Use -h to learn all the fun things you can do :)"
+	echo
 	exit
 }
+function displayHelp () {
+	echoThis "\e[31;1mUsage:\e[0m	syphon [options] -v [YouTube URL/ID]\n"
+	echo
+	echoThis "\e[31;1mGeneral Options:\e[0m\n"
+	echoThis "	-t or -T	Select which media type you would like to save."
+	echoThis "				\e[31ma\e[0m - Download audio only."
+	echoThis "				\e[31mv\e[0m - Download video only."
+	echoThis "				\e[31mav\e[0m - Download both audio and video."
+	echoThis "	-v or -V	YouTube Video URL or Video ID\n"
+	echoThis "\e[31;1mAwesome Options:\e[0m\n"
+	echoThis "	-c			Choose which two colors you would like the Syphon logo to be."
+	echoThis "				The logo is split into two parts; Logo Text and Logo Wire."
+	echoThis "				Example: -c \"34 93\""
+	echoThis "				Each can be set to any number between 30-37 & 90-97."
+	echo
+	echoThis "				30\e[30m███████\e[0m 90\e[90m███████\e[0m"
+	echoThis "				31\e[31m███████\e[0m 90\e[91m███████\e[0m"
+	echoThis "				32\e[32m███████\e[0m 90\e[92m███████\e[0m"
+	echoThis "				33\e[33m███████\e[0m 90\e[93m███████\e[0m"
+	echoThis "				34\e[34m███████\e[0m 90\e[94m███████\e[0m"
+	echoThis "				35\e[35m███████\e[0m 90\e[95m███████\e[0m"
+	echoThis "				36\e[36m███████\e[0m 90\e[96m███████\e[0m"
+	echoThis "				37\e[37m███████\e[0m 90\e[97m███████\e[0m"
+	echo
+	echoThis "				There are also format codes such as blinking or hidden."
+	echoThis "				However, I will leave you to find those."
+	echoThis "				To see all color combinations run \`syphon -C\` (without quotes)."
+}	
 #----------------
 # Error functions
 #-------------------------------------------------------------------------------------
@@ -59,11 +109,11 @@ function displayUsage () {
 # actions commands, such as "exit" or "clear", will not work.
 #-------------------------------------------------------------------------------------
 function displayError () {
-	printf "\n\e[31m$*\e[0m"
+	echoThis "\n\e[31m$*\e[0m"
 	echo
 }
 function attentionGetter () {
-	printf "\e[5m$*\e[0m"
+	echoThis "\e[5m$*\e[0m"
 	echo
 }
 #------------------
@@ -139,20 +189,21 @@ function myProgressBar () { # Usage: youtube-dl(process) & myProgressBar [itag#]
 	theSource=$(youtube-dl -f $1 -g $myTubeURL)
 	#echo $theSource
 	sourceBytes=$(curl -sI $theSource | grep Content-Length | awk '{print $2}')
-	#echo $sourceBytes
-	sourceSizeOrig=${#sourceBytes}
-	#echo $theSourceStringSize
-	sourceSize=${sourceBytes:0:$sourceSizeOrig-1}
-	sourceSize=$((newStringSize))
-	#echo "$newStringSize"
+	#echo "sourceBytes: $sourceBytes"
+	sourceSizeOrig=${#sourceBytes} # String Length
+	#echo "sourceSizeOrig: $sourceSizeOrig"
+	sourceSize=${sourceBytes:0:$sourceSizeOrig-1} # Keep all but last character
+	sourceSize=$((sourceSize))
+	#echo "sourceSize: $sourceSize"
 	#sleep 1
 	#echo "Starting Bar"
 	if [[ $whichOS == 'Darwin' ]]; then
+		theFileSize=1
 		until [[ $theFileSize == $newStringSize ]]; do
 			if [[ $(ls *"$theVideoID"".$2"* > /dev/null 2>&1; echo $?) == "0" ]]; then
-				#fileURL=$(ls *"$theVideoID"".$2"*)
+				fileURL=$(ls *"$theVideoID"".$2"*)
 				#echo $fileURL
-				theFileSize=$(stat -f%z $(ls *"$theVideoID"".$2"*))
+				theFileSize=$(stat -f%z "$fileURL")
 				theFileSize=$((theFileSize))
 				#echo "File is $theFileSize"
 				theTotal=$((100 * theFileSize / sourceSize))
@@ -188,15 +239,20 @@ function myProgressBar () { # Usage: youtube-dl(process) & myProgressBar [itag#]
 #--------------------------------------------------------------------------------------------------------------------------------
 # Define CL input
 #----------------
-#echo "These are the inputs $*"
-saveMediaType=$1
-if [[ $2 == "" ]]; then
-	displayUsage
-fi
-URLorID=$(echo $2|awk '{print match($0, "youtube.com/watch")}')
+while getopts ":t:T:v:V:hHuUc:C" OPTION; do
+	case $OPTION in
+        t|T) saveMediaType=$OPTARG;;
+        v|V) givenVideo=$OPTARG;;
+        h|H) displayHelp; exit;;
+        c) logoColors=$OPTARG;;
+        C) logoColors; exit;;
+        #?) attentionGetter "$OPTARG is not a valid option or may need more commands. Please try again."; exit;;
+    esac
+done
+URLorID=$(echo $givenVideo|awk '{print match($0, "youtube.com/watch")}')
 if [[ $URLorID != "0" ]]; then
 #echo "Full URL"
-myTubeURL=$2
+myTubeURL=$givenVideo
 #echo $myTubeURL
 else
 #echo "ID only"
@@ -204,17 +260,22 @@ myTubeURL="www.youtube.com/watch?v=$2"
 #echo $myTubeURL
 fi
 # Double check input variables
-if [[ "$saveMediaType" != "-"* ]] || [[  "$myTubeURL" != *"youtube.com"* ]]; then
+if [[ "$saveMediaType" == "" ]]; then
+	saveMediaType="av"
+fi
+if [[  "$givenVideo" == "" ]] || [[ "$givenVideo" == *"-"* ]]; then
 	displayUsage
 fi
+clear
+echo 'Initializing...'
+echo
+sleep 1
 #echo "███████╗██╗   ██╗██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗"
-displayLogo 1 #$logoTextColor $logoWireColor
+displayLogo 1 $logoColors #$logoTextColor $logoWireColor
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
-# Define OS
-#----------
-whichOS=$(echo `uname`)
+
 #--------------------------------------------------------------------------------------------------------------------------------
 #********************************************************************************************************************************
 #--------------------------------------------------------------------------------------------------------------------------------
@@ -222,7 +283,7 @@ whichOS=$(echo `uname`)
 # If it is not then ask if the user wants to install it:
 #-------------------------------------------------------
 #echo "██╔════╝╚██╗ ██╔╝██╔══██╗██║  ██║██╔═══██╗████╗  ██║"
-displayLogo 2 #$logoTextColor $logoWireColor
+displayLogo 2 $logoColors #$logoTextColor $logoWireColor
 youtubedlInstalled=$(youtube-dl -h > /dev/null 2>&1; echo $?)
 if [ "$youtubedlInstalled" != "1" ]; then
 	if [ "$youtubedlInstalled" != "0" ]; then
@@ -236,7 +297,7 @@ if [ "$ffmpegInstalled" != 1 ]; then
 	fi
 fi
 #echo "███████╗ ╚████╔╝ ██████╔╝███████║██║   ██║██╔██╗ ██║"
-displayLogo 3 #$logoTextColor $logoWireColor
+displayLogo 3 $logoColors #$logoTextColor $logoWireColor
 whichAreInstalled="$youtubedlInstalled""$ffmpegInstalled"
 if [ "$whichAreInstalled" == "11" ]; then
 	echo
@@ -325,8 +386,9 @@ videoOptions=("264" "137" "136" "135" "134" "133" "160")
 # Check to see if video is already downloaded in the current directory
 #---------------------------------------------------------------------
 #echo "╚════██║  ╚██╔╝  ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║"
-displayLogo 4 #$logoTextColor $logoWireColor
+displayLogo 4 $logoColors #$logoTextColor $logoWireColor
 genVideoName
+# Added check for ext specific results
 if [[ $(ls *"$theVideoName""."* > /dev/null 2>&1; echo $?) == "0" ]]; then
 	if [[ $saveMediaType == *"v"* ]]; then
 		displayError "This video is already in this directory. Please move, delete, or rename the file if you wish to download it again."
@@ -341,7 +403,7 @@ fi
 # Grab the complete list of available qualities.
 #-----------------------------------------------
 #echo "███████║   ██║   ██║     ██║  ██║╚██████╔╝██║ ╚████║"
-displayLogo 5 #$logoTextColor $logoWireColor
+displayLogo 5 $logoColors #$logoTextColor $logoWireColor
 qualityCheck=$(youtube-dl -F $myTubeURL)
 theVideoID=${myTubeURL#h*=} # Removes all but ID from URL with http.
 theVideoID=${theVideoID#www*=} #Removes all but ID from URL without http.
@@ -352,7 +414,7 @@ theVideoID=${theVideoID#you*=} #Removes all but ID from URL without http or www.
 # Begin code for downloading the audio from YouTube:
 #--------------------------------------------------
 #echo "╚══════╝   ╚═╝   ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝"
-displayLogo 6 #$logoTextColor $logoWireColor
+displayLogo 6 $logoColors #$logoTextColor $logoWireColor
 getAudio=$(echo $saveMediaType|awk '{print match($0, "a")}')
 if [[ "$getAudio" != "0" ]]; then
 echo 'Finding the best audio...'
@@ -419,10 +481,12 @@ if [[ $success == 0 ]]; then
 	echo 'Converting...'
 	if [ "$getAudio" != "0" ] && [ "$getVideo" != "0" ]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".mp4")
-		ffmpeg -loglevel quiet -i "$tubeAudioFile" -i "$tubeVideoFile" "$theVideoName"".mp4"
+		ffmpeg -i "$tubeAudioFile" -i "$tubeVideoFile" "$theVideoName"".mp4"
 		echo 'Cleaning up the mess I made...'
 		rm "$tubeAudioFile"
+		echo $tubeAudioFile
 		rm "$tubeVideoFile"
+		echo $tubeVideoFile
 	elif [[ "$getAudio" != "0" ]]; then
 		convertedFileName=$(echo $(youtube-dl -e $myTubeURL)".m4a")
 		ffmpeg -loglevel quiet -i "$tubeAudioFile" "$theVideoName"".m4a"
